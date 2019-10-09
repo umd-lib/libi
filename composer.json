@@ -19,7 +19,9 @@
         "drupal/redirect": "^1.4",
         "drupal/login_redirect_per_role": "^1.2",
         "drupal/queue_ui": "^2.0",
-        "drupal/mailsystem": "^4.1"
+        "drupal/mailsystem": "^4.1",
+        "drupal/ldap": "^3.0@beta",
+        "drupal/metatag": "^1.10"
     },
     "replace": {
         "drupal/core": "^8.7"
