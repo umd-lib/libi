@@ -6,10 +6,10 @@ global-styling:
       https://www.lib.umd.edu/unify-1.7/assets/plugins/bootstrap/css/bootstrap.min.css: { type: external }
       https://www.lib.umd.edu/unify-1.7/assets/css/style.css: { type: external }
       https://www.lib.umd.edu/unify-1.7/assets/css/headers/header-v1.css: { type: external }
-      css/rwd/umd-red.css: {}
-      css/rwd/custom.css: {}
-      css/rwd/print.css: {}
-      css/custom.css: {}
+      css/base/custom.css: {}
+      css/base/umd-red.css: {}
+      css/base/blog.css: {}
+      css/base/print.css: {}
   js:
     base:
       https://use.fontawesome.com/f08a468f3b.js: { type: external }
