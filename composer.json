@@ -13,7 +13,6 @@
         "drupal/externalauth": "^1.2",
         "drupal/cas_attributes": "^1.0@beta",
         "drupal/message_digest": "^1.0@RC",
-        "drupal/rules": "^3.0@alpha",
         "drupal/node_view_permissions": "^1.2",
         "drupal/pathauto": "^1.4",
         "drupal/redirect": "^1.4",
@@ -22,12 +21,11 @@
         "drupal/mailsystem": "^4.1",
         "drupal/ldap": "^3.0@beta",
         "drupal/metatag": "^1.10",
-        "drupal/htmlmail": "^3.0@alpha",
         "drupal/ultimate_cron": "^2.0@alpha",
         "drupal/pathologic": "^1.0@alpha",
-        "drupal/smtp": "1.x-dev",
         "drupal/content_sync": "^2.1",
-        "drupal/swiftmailer": "^1.0@beta"
+        "drupal/swiftmailer": "^1.0@beta",
+        "drupal/easy_email": "^1.0@beta"
     },
     "replace": {
         "drupal/core": "^8.7"
