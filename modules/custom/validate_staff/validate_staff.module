@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Validate staff module.
+ */
+
+use Drupal\user\Entity\User;
+use Drupal\message\Entity\Message;
+use Drupal\user\UserInterface;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for user entities.
+ */
+function validate_staff_user_presave (UserInterface $account) {
+  $messenger = \Drupal::messenger();
+  $name = $account->getAccountName();
+  \Drupal::logger('validate_staff')
+      ->error($name);
+
+  $factory = \Drupal::service('ldap.servers');
+  $server = $factory->getServerByIdEnabled('umd');
+  $filter = "(&(uid=" . $name . ")(ou=LIBR-*))";
+  $result = $server->search(NULL, $filter);
+
+  if ($result['count'] < 1) {
+    $tokens = ['%drupal_username' => $name];
+    \Drupal::logger('validate_staff')
+      ->error('Drupal account %drupal_username is blocked because not found LIBR-*.', $tokens);
+    $response = new RedirectResponse(\Drupal::url('<front>'));
+    $response->send();
+    $messenger->addMessage('This blog is available only to UMD Library Staff and Faculty', $messenger::TYPE_WARNING);
+    exit;
+  }
+  else {
+    $account->addRole('library_staff');
+  }
+}

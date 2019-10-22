@@ -25,8 +25,7 @@ function message_notify_staff_node_insert(Node $node) {
     $notifier->send($message, [], 'message_digest:ten_minutes');
 
     $messenger = \Drupal::messenger();
-    $messenger->addMessage('Added to message digest', $messenger::TYPE_WARNING);
-    \Drupal::logger('message_notify_staff')->notice($message['Article node ' . $node->nid . ' added to digest']);
+    $messenger->addMessage('Added to message digest', $messenger::TYPE_STATUS);
   }
 }
 
@@ -38,6 +37,7 @@ function message_notify_staff_mail_alter(&$message) {
     $title = \Drupal::config('system.site')->get('name');
     $date = new DateTime('NOW');
     $message['subject'] = t('@title Digest for @date', ['@title' => $title, '@date' => $date->format('l, F jS i')]);
+    $message['reply-to'] = 'jgottwig@umd.edu';
   }
     \Drupal::logger('message_notify_staff')->notice($message['body'][0]);
 }

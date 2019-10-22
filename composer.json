@@ -25,7 +25,8 @@
         "drupal/pathologic": "^1.0@alpha",
         "drupal/content_sync": "^2.1",
         "drupal/swiftmailer": "^1.0@beta",
-        "drupal/easy_email": "^1.0@beta"
+        "drupal/easy_email": "^1.0@beta",
+        "drupal/typed_data": "^1.0@alpha"
     },
     "replace": {
         "drupal/core": "^8.7"

@@ -26,12 +26,20 @@ img.site-logo {
   height: 54px;
 }
 
-.notice {
+.notice .Warning, .notice .Warning ul li {
   padding: 5px;
   border: 1px solid #ff5b4d;
   background-color: #ffc4bf;
-  color: 660800;
+  color: #660800;
   margin: 5px;
+}
+
+.notice .Status, .notice .Status ul li {
+  background-color: #4287f5;
+  border: 1px solid #023d9c;
+  color: white;
+  margin: 5px;
+  padding: 5px;
 }
 
 article footer {
