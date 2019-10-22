@@ -16,9 +16,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 function validate_staff_user_presave (UserInterface $account) {
   $messenger = \Drupal::messenger();
+
   $name = $account->getAccountName();
-  \Drupal::logger('validate_staff')
-      ->error($name);
 
   $factory = \Drupal::service('ldap.servers');
   $server = $factory->getServerByIdEnabled('umd');
