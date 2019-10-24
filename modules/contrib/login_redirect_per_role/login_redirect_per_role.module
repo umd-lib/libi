@@ -5,8 +5,9 @@
  * Contains login_redirect_per_role.module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -25,28 +26,23 @@ function login_redirect_per_role_help($route_name, RouteMatchInterface $route_ma
 }
 
 /**
- * Implements hook_user_login().
+ * Implements hook_form_FORM_ID_alter().
  */
-function login_redirect_per_role_user_login($account) {
+function login_redirect_per_role_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#submit'][] = 'login_redirect_per_role_user_login_form_submit';
+}
 
-  $config = \Drupal::config('login_redirect_per_role.redirecturlsettings');
-  $user_roles = $account->getRoles();
-  if ($user_roles[0] == 'authenticated') {
-    unset($user_roles[0]);
-  }
-  foreach ($user_roles as $role) {
-    if ($config->get('login_redirect_per_role_' . $role)) {
-      $url = $config->get('login_redirect_per_role_' . $role);
-      $response = new RedirectResponse($url);
-      $response->send();
-      exit();
-    }
-    if ($config->get('default_site_url')) {
-      $url = $config->get('default_site_url');
-      $response = new RedirectResponse($url);
-      $response->send();
-      exit();
-    }
+/**
+ * Login form submit callback: Set redirect URL.
+ */
+function login_redirect_per_role_user_login_form_submit(array &$form, FormStateInterface $form_state) {
+
+  /** @var \Drupal\login_redirect_per_role\LoginRedirectPerRole $service */
+  $service = \Drupal::service('login_redirect_per_role.service');
+  $url = $service->getRedirectUrl();
+
+  if ($url instanceof Url) {
+    $form_state->setRedirectUrl($url);
   }
 
 }
