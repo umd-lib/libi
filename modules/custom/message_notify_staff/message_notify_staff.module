@@ -10,22 +10,25 @@ use Drupal\node\Entity\Node;
 use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
 use Drupal\message\Entity\Message;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function message_notify_staff_node_insert(Node $node) {
   if ($node->bundle() == "article") {
+    $uid = Settings::get('digest_user');
+    $digest_key = Settings::get('digest_key', 'message_digest:ten_minutes'); 
     $notifier = \Drupal::service('message_notify.sender');
-    $message = Message::create(['template' => 'new_content', 'uid' => '1']);
+    $message = Message::create(['template' => 'new_content', 'uid' => $uid]);
     $message->set('field_node_reference', $node);
     $message->set('field_published', $node->isPublished());
     $message->save();
 
-    $notifier->send($message, [], 'message_digest:ten_minutes');
+    $notifier->send($message, [], $digest_key);
 
     $messenger = \Drupal::messenger();
-    $messenger->addMessage('Added to message digest', $messenger::TYPE_STATUS);
+    $messenger->addMessage('Added to message digest: ' . $uid . ' ' . $digest_key, $messenger::TYPE_STATUS);
   }
 }
 
@@ -36,8 +39,8 @@ function message_notify_staff_mail_alter(&$message) {
   if ($message['id'] == 'message_digest_digest') {
     $title = \Drupal::config('system.site')->get('name');
     $date = new DateTime('NOW');
-    $message['subject'] = t('@title Digest for @date', ['@title' => $title, '@date' => $date->format('l, F jS i')]);
-    $message['reply-to'] = 'jgottwig@umd.edu';
+    $message['subject'] = t('@title Digest for @date', ['@title' => $title, '@date' => $date->format('l, F jS')]);
+    $replyTo = Settings::get('digest_reply_to');
+    $message['reply-to'] = $replyTo;
   }
-    \Drupal::logger('message_notify_staff')->notice($message['body'][0]);
 }
