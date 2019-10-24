@@ -29,7 +29,8 @@
         "drupal/typed_data": "^1.0@alpha",
         "drupal/ckeditor_drupalbreaks": "1.x-dev",
         "drupal/select_or_other": "^1.0@alpha",
-        "drupal/backup_migrate": "^4.0"
+        "drupal/backup_migrate": "^4.0",
+        "drupal/autologout": "^1.0"
     },
     "replace": {
         "drupal/core": "^8.7"
