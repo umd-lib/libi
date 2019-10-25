@@ -1,9 +1,8 @@
 global-styling:
   version: 1.x
   css:
-    base:
+    theme:
       https://fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin: { type: external }
-      https://www.lib.umd.edu/unify-1.7/assets/plugins/bootstrap/css/bootstrap.min.css: { type: external }
       https://www.lib.umd.edu/unify-1.7/assets/css/style.css: { type: external }
       https://www.lib.umd.edu/unify-1.7/assets/css/headers/header-v1.css: { type: external }
       css/base/custom.css: {}
@@ -11,5 +10,4 @@ global-styling:
       css/base/blog.css: {}
       css/base/print.css: {}
   js:
-    base:
-      https://use.fontawesome.com/f08a468f3b.js: { type: external }
+    https://use.fontawesome.com/f08a468f3b.js: { type: external }
