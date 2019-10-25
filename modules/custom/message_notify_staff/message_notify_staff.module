@@ -10,32 +10,37 @@ use Drupal\node\Entity\Node;
 use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
 use Drupal\message\Entity\Message;
-
-/**
- * Implements hook_ENTITY_TYPE_insert() for node entities. 
- *
- * Send a message to the node author when a new comment is created.
- */
-/**function message_notify_staff_comment_insert(Comment $comment) {
-  // Get node where comment was posted.
-  $node = $comment->get('entity_id')->first()->get('entity')->getTarget()->getValue();
-  // Call message notify service.
-  $notifier = \Drupal::service('message_notify.sender');
-  // Create a message with node author as message creator.
-  $message = Message::create(['template' => 'new_content', 'uid' => $node->getOwnerId()]);
-  $message->set('field_comment_reference', $comment);
-  $message->set('field_published', $comment->isPublished());
-  $message->save();
-  // Send message to message creator(in this case = node author).
-  $notifier->send($message);
-}*/
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function message_notify_staff_node_insert(Node $node) {
-  $message = Message::create(['template' => 'new_content', 'uid' => $node->get('uid')]);
-  $message->set('field_node_reference', $node);
-  $message->set('field_published', $node->isPublished());
-  $message->save();
+  if ($node->bundle() == "article") {
+    $uid = Settings::get('digest_user');
+    $digest_key = Settings::get('digest_key', 'message_digest:ten_minutes'); 
+    $notifier = \Drupal::service('message_notify.sender');
+    $message = Message::create(['template' => 'new_content', 'uid' => $uid]);
+    $message->set('field_node_reference', $node);
+    $message->set('field_published', $node->isPublished());
+    $message->save();
+
+    $notifier->send($message, [], $digest_key);
+
+    $messenger = \Drupal::messenger();
+    $messenger->addMessage('Added to message digest: ' . $uid . ' ' . $digest_key, $messenger::TYPE_STATUS);
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function message_notify_staff_mail_alter(&$message) {
+  if ($message['id'] == 'message_digest_digest') {
+    $title = \Drupal::config('system.site')->get('name');
+    $date = new DateTime('NOW');
+    $message['subject'] = t('@title Digest for @date', ['@title' => $title, '@date' => $date->format('l, F jS')]);
+    $replyTo = Settings::get('digest_reply_to');
+    $message['reply-to'] = $replyTo;
+  }
 }

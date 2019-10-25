@@ -88,6 +88,12 @@ class RedirectURLSettingsForm extends ConfigFormBase {
 
     $config = $this->config('login_redirect_per_role.redirecturlsettings');
 
+    $form['allow_destination'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow "destination" query parameter to override redirects configured here.'),
+      '#default_value' => $config->get('allow_destination'),
+    ];
+
     $form['default_site_url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default URL'),
@@ -118,7 +124,8 @@ class RedirectURLSettingsForm extends ConfigFormBase {
 
     $values = $form_state->getValues();
     foreach ($values as $key => $value) {
-      if (explode('login_redirect_per_role_', $key)[1] && $value) {
+      $login_redirect_per_role = explode('login_redirect_per_role_', $key);
+      if (isset($login_redirect_per_role[1]) && $login_redirect_per_role[1] && $value) {
         if ($value[0] != '/') {
           $form_state->setErrorByName($key, 'Start URL with "/"');
         }
@@ -146,11 +153,16 @@ class RedirectURLSettingsForm extends ConfigFormBase {
     $values = $form_state->getValues();
 
     $this->config('login_redirect_per_role.redirecturlsettings')
+      ->set('allow_destination', $values['allow_destination'])
+      ->save();
+
+    $this->config('login_redirect_per_role.redirecturlsettings')
       ->set('default_site_url', $values['default_site_url'])
       ->save();
 
     foreach ($values as $key => $value) {
-      if (explode('login_redirect_per_role_', $key)[1]) {
+      $login_redirect_per_role = explode('login_redirect_per_role_', $key);
+      if (isset($login_redirect_per_role[1]) && $login_redirect_per_role[1] && $value) {
         $this->config('login_redirect_per_role.redirecturlsettings')
           ->set($key, $value)
           ->save();
