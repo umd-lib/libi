@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7380a85448d681194b183fb07d5b7898",
+    "content-hash": "5e25a05c0b4db7197af18f35ab53f3a4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2226,7 +2226,8 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/ckeditor_drupalbreaks",
                 "issues": "https://www.drupal.org/project/issues/ckeditor_drupalbreaks"
-            }
+            },
+            "time": "2018-02-01T17:07:39+00:00"
         },
         {
             "name": "drupal/content_sync",
@@ -3486,6 +3487,63 @@
             "homepage": "https://www.drupal.org/project/redirect",
             "support": {
                 "source": "https://git.drupalcode.org/project/redirect"
+            }
+        },
+        {
+            "name": "drupal/schema_metatag",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/schema_metatag.git",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/schema_metatag-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "5d0a677608e30a7c8ffb43d98759b19cf5be17f6"
+            },
+            "require": {
+                "drupal/core": "~8.0",
+                "drupal/metatag": "*"
+            },
+            "require-dev": {
+                "drupal/metatag_views": "*",
+                "drupal/schema_article": "*",
+                "drupal/schema_organization": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1563033785",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "KarenS",
+                    "homepage": "https://www.drupal.org/user/45874"
+                }
+            ],
+            "description": "Metatag implementation of Schema.org structured data (JSON-LD)",
+            "homepage": "https://www.drupal.org/project/schema_metatag",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/schema_metatag",
+                "issues": "https://www.drupal.org/project/issues/schema_metatag"
             }
         },
         {
@@ -9656,8 +9714,8 @@
         "drupal/swiftmailer": 10,
         "drupal/easy_email": 10,
         "drupal/typed_data": 15,
-        "drupal/ckeditor_drupalbreaks": 20,
         "drupal/select_or_other": 15,
+        "drupal/ckeditor_drupalbreaks": 20,
         "behat/mink": 20,
         "behat/mink-selenium2-driver": 20
     },
