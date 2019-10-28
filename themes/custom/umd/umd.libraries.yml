@@ -9,5 +9,3 @@ global-styling:
       css/base/umd-red.css: {}
       css/base/blog.css: {}
       css/base/print.css: {}
-  js:
-    https://use.fontawesome.com/f08a468f3b.js: { type: external }
