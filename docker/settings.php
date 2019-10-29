@@ -1,5 +1,9 @@
 <?php
 
+$settings['reverse_proxy'] = TRUE;
+
+$settings['reverse_proxy_addresses'] = array($_SERVER['REMOTE_ADDR']);
+
 $settings['update_free_access'] = FALSE;
 
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
