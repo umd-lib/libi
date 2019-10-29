@@ -36,10 +36,10 @@ COPY docker/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 COPY docker/settings.php /app/settings.php
 
 # Copy the staff-blog codebase to /app/web
-COPY . /app/web
+COPY . /app/web/blog
 
 # Install dependcies, set ownership and delete the sync dir under /app/web
-RUN cd /app/web && \
+RUN cd /app/web/blog && \
 	composer install --no-dev && \
 	chown -R www-data:www-data /app/web && \
 	rm -rf /app/web/sync
