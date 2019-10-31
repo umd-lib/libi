@@ -1,12 +1,16 @@
 FROM drupal:8.7.8-apache
 
 # Install necessary packages
-RUN apt-get update && apt-get install -y \
+RUN seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} && \
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" | tee /etc/apt/sources.list.d/postgresql.list && \
+	apt-get update && apt-get install -y --allow-unauthenticated \
 	curl \
 	git \
 	vim \
 	wget \
-	gettext-base
+	gettext-base \
+	postgresql-client-10 && \
+	rm -rf /usr/share/man/man*
 
 # Configure PHP-LDAP
 RUN apt-get install -y libldap2-dev \
