@@ -29,19 +29,16 @@ RUN wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/down
 # Remove the default drupal codebase
 RUN rm -rf /var/www/html/*
 
-COPY sync /app/sync
-
 COPY docker/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 COPY docker/settings.php /app/settings.php
 
-# Copy the staff-blog codebase to /app/web
+# Copy the staff-blog codebase to /app/web/blog
 COPY . /app/web/blog
 
-# Install dependcies, set ownership and delete the sync dir under /app/web
+# Install dependcies, set ownership and delete the sync dir under /app/web/blog
 RUN cd /app/web/blog && \
 	composer install --no-dev && \
-	chown -R www-data:www-data /app/web && \
-	rm -rf /app/web/sync
+	chown -R www-data:www-data /app/web/blog
 
-WORKDIR /app
+WORKDIR /app/web/blog

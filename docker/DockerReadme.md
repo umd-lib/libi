@@ -1,18 +1,8 @@
 # Building the staff-blog image
 
-## Prerequisites
-
-Clone the staff-blog-configuration to a direcotry named `sync` under the staff-blog repo.
-
-Assuming staff-blog codebase is checked out at `/apps/git/staff-blog`:
-
-    cd /apps/git/staff-blog
-    git clone git@bitbucket.org:umd-lib/staff-blog-configuration.git sync
-
-
 ## Build
 
-From the `/apps/git/staff-blog` directory:
+From the `/apps/git/staff-blog` (or `/apps/git/libi` depending where the code is cloned to) directory:
 
     docker build .
 
