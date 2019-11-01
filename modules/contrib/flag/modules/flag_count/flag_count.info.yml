@@ -1,5 +1,5 @@
-name: Flag Follower
-description: Provides an example user flag and supporting views.
+name: Flag Count
+description: Provides an example on how to display flag counts
 core: 8.x
 type: module
 dependencies:
