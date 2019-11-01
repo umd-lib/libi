@@ -28,7 +28,7 @@ function message_notify_staff_node_insert(Node $node) {
     $notifier->send($message, [], $digest_key);
 
     $messenger = \Drupal::messenger();
-    $messenger->addMessage('Added to message digest: ' . $uid . ' ' . $digest_key, $messenger::TYPE_STATUS);
+    // $messenger->addMessage('Added to message digest: ' . $uid . ' ' . $digest_key, $messenger::TYPE_STATUS);
   }
 }
 

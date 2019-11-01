@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e25a05c0b4db7197af18f35ab53f3a4",
+    "content-hash": "152959e446e1f869c4b4b1c4fb9c653c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2230,69 +2230,6 @@
             "time": "2018-02-01T17:07:39+00:00"
         },
         {
-            "name": "drupal/content_sync",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/content_sync.git",
-                "reference": "8.x-2.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/content_sync-8.x-2.1.zip",
-                "reference": "8.x-2.1",
-                "shasum": "6eab25cdeed48efdd608db40191243f0bd61db47"
-            },
-            "require": {
-                "drupal/core": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-2.x": "2.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-2.1",
-                    "datestamp": "1551619984",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Blanca.Esqueda",
-                    "homepage": "https://www.drupal.org/user/3082389"
-                },
-                {
-                    "name": "andrew.trebble",
-                    "homepage": "https://www.drupal.org/user/3159065"
-                },
-                {
-                    "name": "chris.smith",
-                    "homepage": "https://www.drupal.org/user/1812018"
-                },
-                {
-                    "name": "dabito",
-                    "homepage": "https://www.drupal.org/user/2400660"
-                },
-                {
-                    "name": "david4lim",
-                    "homepage": "https://www.drupal.org/user/934262"
-                }
-            ],
-            "description": "Allows to import/export content using YAML files",
-            "homepage": "https://www.drupal.org/project/content_sync",
-            "support": {
-                "source": "https://git.drupalcode.org/project/content_sync"
-            }
-        },
-        {
             "name": "drupal/ctools",
             "version": "3.2.0",
             "source": {
@@ -2622,6 +2559,70 @@
             "homepage": "https://www.drupal.org/project/flag",
             "support": {
                 "source": "https://git.drupalcode.org/project/flag"
+            }
+        },
+        {
+            "name": "drupal/fontawesome",
+            "version": "2.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/fontawesome.git",
+                "reference": "8.x-2.14"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/fontawesome-8.x-2.14.zip",
+                "reference": "8.x-2.14",
+                "shasum": "5bba6b1cba7450256defc36a0cbfdd70744bde1d"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-2.14",
+                    "datestamp": "1564762385",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel.Moberly",
+                    "homepage": "https://www.drupal.org/user/1160788"
+                },
+                {
+                    "name": "RobLoach",
+                    "homepage": "https://www.drupal.org/user/61114"
+                },
+                {
+                    "name": "inders",
+                    "homepage": "https://www.drupal.org/user/127640"
+                },
+                {
+                    "name": "truls1502",
+                    "homepage": "https://www.drupal.org/user/325866"
+                }
+            ],
+            "description": "The web's most popular icon set and toolkit.",
+            "homepage": "https://www.drupal.org/project/fontawesome",
+            "support": {
+                "source": "https://git.drupalcode.org/project/fontawesome"
             }
         },
         {
