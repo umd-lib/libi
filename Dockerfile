@@ -1,12 +1,16 @@
 FROM drupal:8.7.8-apache
 
 # Install necessary packages
-RUN apt-get update && apt-get install -y \
+RUN seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} && \
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" | tee /etc/apt/sources.list.d/postgresql.list && \
+	apt-get update && apt-get install -y --allow-unauthenticated \
 	curl \
 	git \
 	vim \
 	wget \
-	gettext-base
+	gettext-base \
+	postgresql-client-10 && \
+	rm -rf /usr/share/man/man*
 
 # Configure PHP-LDAP
 RUN apt-get install -y libldap2-dev \
@@ -29,19 +33,16 @@ RUN wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/down
 # Remove the default drupal codebase
 RUN rm -rf /var/www/html/*
 
-COPY sync /app/sync
-
 COPY docker/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 COPY docker/settings.php /app/settings.php
 
-# Copy the staff-blog codebase to /app/web
+# Copy the staff-blog codebase to /app/web/blog
 COPY . /app/web/blog
 
-# Install dependcies, set ownership and delete the sync dir under /app/web
+# Install dependcies, set ownership and delete the sync dir under /app/web/blog
 RUN cd /app/web/blog && \
 	composer install --no-dev && \
-	chown -R www-data:www-data /app/web && \
-	rm -rf /app/web/sync
+	chown -R www-data:www-data /app/web/blog
 
-WORKDIR /app
+WORKDIR /app/web/blog
