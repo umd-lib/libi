@@ -1501,3 +1501,8 @@ i.icon-bg-u {
 .blog-trending h3 a:hover {
 	color: #a40404 !important;
 }
+.pager li>a {
+    background-color: #b61332;
+    color: #FFFFFF;
+    font-size: large;
+}
