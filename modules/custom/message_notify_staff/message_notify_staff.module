@@ -11,6 +11,8 @@ use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
 use Drupal\message\Entity\Message;
 use Drupal\Core\Site\Settings;
+use Psr\Log\LoggerInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_insert() for node entities.
@@ -43,4 +45,34 @@ function message_notify_staff_mail_alter(&$message) {
     $replyTo = Settings::get('digest_reply_to');
     $message['reply-to'] = $replyTo;
   }
+}
+
+/**
+ * Implements hook_message_subscribe_message_alter()
+ */
+function message_notify_staff_message_subscribe_message_alter(MessageInterface $message, DeliveryCandidateInterface $delivery_candidate) {
+  \Drupal::logger('message_notify_staff')->warning('<pre><code>' . print_r($message, TRUE) . '</code></pre>');
+  \Drupal::logger('message_notify_staff')->warning('<pre><code>' . print_r($delivery_candidate, TRUE) . '</code></pre>');
+}
+
+/**
+ * Implements hook_message_digest_aggregate_alter().
+ */
+function message_notify_staff_message_digest_aggregate_alter(&$context, $account, $notifier) {
+  \Drupal::logger('message_notify_staff')->warning('<pre><code>' . print_r($context, TRUE) . '</code></pre>');
+  // \Drupal::logger('message_notify_staff')->warning('<pre><code>' . print_r($notifier, TRUE) . '</code></pre>');
+  // \Drupal::logger('message_notify_staff')->warning('<pre><code>' . print_r($account, TRUE) . '</code></pre>');
+}
+
+/**
+ * Implements hook_message_digest_view_mode_alter().
+ */
+function hook_message_digest_view_mode_alter(array &$context, MessageNotifierInterface $notifier, UserInterface $account) {
+
+  // If the account is blocked, deliver anyway.
+  // Note: this overrides the default module behavior.
+  if ($account->isBlocked()) {
+    $context['deliver'] = TRUE;
+  }
+
 }
