@@ -11,6 +11,8 @@ use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
 use Drupal\message\Entity\Message;
 use Drupal\Core\Site\Settings;
+use Psr\Log\LoggerInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_insert() for node entities.
@@ -43,4 +45,18 @@ function message_notify_staff_mail_alter(&$message) {
     $replyTo = Settings::get('digest_reply_to');
     $message['reply-to'] = $replyTo;
   }
+}
+
+/**
+ * Implements hook_message_digest_view_mode_alter().
+ */
+function message_notify_staff_message_digest_view_mode_alter(&$context, $notifier, $account) {
+
+  // If the account is blocked, deliver anyway.
+  // Note: this overrides the default module behavior.
+  if ($account->isBlocked()) {
+    $context['deliver'] = TRUE;
+    \Drupal::logger('message_notify_staff')->warning('Overriding default account blocked behavior for digest.');
+  }
+
 }
