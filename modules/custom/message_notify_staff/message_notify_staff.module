@@ -50,7 +50,7 @@ function message_notify_staff_mail_alter(&$message) {
 /**
  * Implements hook_message_digest_view_mode_alter().
  */
-function hook_message_digest_view_mode_alter(array &$context, MessageNotifierInterface $notifier, UserInterface $account) {
+function message_notify_staff_message_digest_view_mode_alter(&$context, $notifier, $account) {
 
   // If the account is blocked, deliver anyway.
   // Note: this overrides the default module behavior.
