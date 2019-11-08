@@ -13,6 +13,7 @@ use Drupal\message\Entity\Message;
 use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerInterface;
 use Drupal\user\UserInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_ENTITY_TYPE_insert() for node entities.
@@ -58,5 +59,58 @@ function message_notify_staff_message_digest_view_mode_alter(&$context, $notifie
     $context['deliver'] = TRUE;
     \Drupal::logger('message_notify_staff')->warning('Overriding default account blocked behavior for digest.');
   }
+
+}
+
+/**
+ * Allow modules to messages being aggregated for digests.
+ *
+ * @param array $context
+ *   An array consisting of the following data:
+ *   - 'data': The raw result row from the `message_digest` table.
+ *   - 'entity_type': The entity type. Set to an empty string to switch to a
+ *     global digest (eg, un-grouped).
+ *   - 'entity_id': The entity ID. Set to an empty string to switch to a global
+ *     digest (eg, un-grouped).
+ *   - 'messages': An array of messages to be sent. These are in the order
+ *     they'll appear in the digest, so can be re-arranged/sorted as needed.
+ * @param \Drupal\user\UserInterface $account
+ *   The user account object the digests are being gathered for.
+ * @param \Drupal\message_notify\Plugin\Notifier\MessageNotifierInterface $notifier
+ *   The notifier plugin being used.
+ *
+ * Implements hook_message_digest_aggregate_alter().
+ */
+function message_notify_staff_message_digest_aggregate_alter(&$context, $account, $notifier) {
+  // Aggregate all content into one digest by setting gid to 0 for users that
+  // have opted in via a field called `aggregate_content`, and if this is the
+  // weekly digest.
+  // if ($account->aggregate_content->value && $notifier->getPluginId() === 'message_digest:weekly') {
+  //   $context['gid'] = 0;
+  // }
+  dsm('messages');
+  $messages = $context['messages'];
+  // dsm($messages);
+dsm(count($messages));
+
+  foreach ($messages as $key => $message) {
+    dsm($key);
+    $nid = $message->get('field_node_reference')->getString();
+    $node = \Drupal\node\Entity\Node::load($nid);
+
+    $tid = $node->get('field_tags')->getString();
+dsm($tid);
+ $term = Term::load($tid);
+ $name = $term->getName();
+ dsm($name);
+    $message->set('field_term_name', $name);
+    $message->save();
+    // dsm($message);
+    break;
+  }
+
+  $messages[55] = $message;
+  $context['messages'] = $messages;
+dsm($context);
 
 }
