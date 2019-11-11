@@ -42,7 +42,7 @@ function message_notify_staff_mail_alter(&$message) {
   if ($message['id'] == 'message_digest_digest') {
     $title = \Drupal::config('system.site')->get('name');
     $date = new DateTime('NOW');
-    $message['subject'] = t('@title Digest for @date', ['@title' => $title, '@date' => $date->format('l, F jS')]);
+    $message['subject'] = t('@title Digest for @date @rand', ['@title' => $title, '@date' => $date->format('l, F jS'), '@rand' => rand()]);
     $replyTo = Settings::get('digest_reply_to');
     $message['reply-to'] = $replyTo;
   }
@@ -82,35 +82,65 @@ function message_notify_staff_message_digest_view_mode_alter(&$context, $notifie
  * Implements hook_message_digest_aggregate_alter().
  */
 function message_notify_staff_message_digest_aggregate_alter(&$context, $account, $notifier) {
-  // Aggregate all content into one digest by setting gid to 0 for users that
-  // have opted in via a field called `aggregate_content`, and if this is the
-  // weekly digest.
-  // if ($account->aggregate_content->value && $notifier->getPluginId() === 'message_digest:weekly') {
-  //   $context['gid'] = 0;
-  // }
-  dsm('messages');
   $messages = $context['messages'];
-  // dsm($messages);
-dsm(count($messages));
+  unset($context['messages']);
+  $messages = message_notify_staff_term_reorder($messages, 'tags');
+  dsm($messages);
+  $context['messages'] = $messages;
+}
+
+/**
+ * Take an array of messages and rearrange them based on a given taxonomy.
+ *
+ * @args
+ *   $messages: An array of messages ordered by message_digest default
+ *   $vid: Vocabulary ID
+ * @return
+ *   array of messages rearranged by taxonomy term.
+ */
+function message_notify_staff_term_reorder($messages, $vid) {
+  $tags =\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
+  $categories = [];
+  foreach ($tags as $tag) {
+    $categories[$tag->name] = array();
+  }
+  $categories['None'] = array();
 
   foreach ($messages as $key => $message) {
-    dsm($key);
-    $nid = $message->get('field_node_reference')->getString();
-    $node = \Drupal\node\Entity\Node::load($nid);
-
-    $tid = $node->get('field_tags')->getString();
-dsm($tid);
- $term = Term::load($tid);
- $name = $term->getName();
- dsm($name);
-    $message->set('field_term_name', $name);
-    $message->save();
-    // dsm($message);
-    break;
+    $term = trim(message_notify_get_category($message)); 
+    if ($term && isset($categories[$term])) {
+      $categories[$term][$key] = $message; 
+    }
+    else {
+      $categories['None'][$key] = $message;
+    } 
   }
 
-  $messages[55] = $message;
-  $context['messages'] = $messages;
-dsm($context);
+  $reorder = [];
+  foreach ($categories as $category => $raw) {
+    foreach ($raw as $key => $value) {
+      $reorder[$key] = $value; 
+    }
+  }
 
+  return $reorder;
+}
+
+/**
+ * @args
+ *   $message: A single message object.
+ * @return
+ *   Term for a given message. Note: Assumes single value.
+ */
+function message_notify_get_category($message) {
+    $nid = $message->get('field_node_reference')->getString();
+    $node = \Drupal\node\Entity\Node::load($nid);
+    $tid = $node->get('field_tags')->getString();
+    if ($tid != null) {
+      $term = Term::load($tid);
+      return $term->getName();
+      // $message->set('field_term_name', $name);
+      // $message->save();
+    }
+    return FALSE;
 }
