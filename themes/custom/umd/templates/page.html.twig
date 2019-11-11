@@ -50,6 +50,10 @@
  * @see html.html.twig
  */
 #}
+<!-- Environment Banner12 -->
+    {%if settings.environment_message %} 
+    <p class="environment-banner">{{settings.environment_message}}</p>
+    {% endif %}
 <div id="page-wrapper" class="wrapper site">
   <div id="page">
     <header id="header" class="header" role="banner" aria-label="{{ 'Site header'|t }}">
