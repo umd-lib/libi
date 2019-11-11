@@ -68,11 +68,10 @@ function message_notify_staff_message_digest_view_mode_alter(&$context, $notifie
 function message_notify_staff_message_digest_aggregate_alter(&$context, $account, $notifier) {
   $messages = $context['messages'];
   $updated_messages = message_notify_staff_term_reorder($messages, 'tags');
-  if ($updated_messages) {
+  if ($updated_messages && count($updated_messages) > 0) {
     unset($context['messages']);
     $context['messages'] = $updated_messages;
   }
-  dsm($messages);
 }
 
 /**
