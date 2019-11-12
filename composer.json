@@ -31,7 +31,8 @@
         "drupal/bootstrap": "^3.20",
         "drupal/schema_metatag": "^1.4",
         "drupal/ckeditor_drupalbreaks": "1.x-dev",
-        "drupal/fontawesome": "^2.14"
+        "drupal/fontawesome": "^2.14",
+        "drupal/core": "^8.7"
     },
     "replace": {
         "drupal/core": "^8.7"
