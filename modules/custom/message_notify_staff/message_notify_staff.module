@@ -42,7 +42,7 @@ function message_notify_staff_mail_alter(&$message) {
   if ($message['id'] == 'message_digest_digest') {
     $title = \Drupal::config('system.site')->get('name');
     $date = new DateTime('NOW');
-    $message['subject'] = t('@title Digest for @date @rand', ['@title' => $title, '@date' => $date->format('l, F jS'), '@rand' => rand()]);
+    $message['subject'] = t('@title Digest for @date', ['@title' => $title, '@date' => $date->format('l, F jS')]);
     $replyTo = Settings::get('digest_reply_to');
     $message['reply-to'] = $replyTo;
   }
