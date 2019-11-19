@@ -32,7 +32,8 @@
         "drupal/schema_metatag": "^1.4",
         "drupal/ckeditor_drupalbreaks": "1.x-dev",
         "drupal/fontawesome": "^2.14",
-        "drupal/core": "^8.7"
+        "drupal/core": "^8.7",
+        "drupal/smart_read_more_link": "^1.7"
     },
     "replace": {
         "drupal/core": "^8.7"
