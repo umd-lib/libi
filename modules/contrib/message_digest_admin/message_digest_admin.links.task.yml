@@ -1,0 +1,16 @@
+message_digest_admin.tabs:
+  route_name: message_digest_admin.tabs.default
+  title: 'Test Tab' 
+  base_route: message_digest_admin.tabs.default
+
+message_digest_admin.tabs_second:
+  route_name: message_digest_admin.tabs.send
+  title: 'Send Tab'
+  base_route: message_digest_admin.tabs.default
+  weight: 2
+
+message_digest_admin.tabs_third:
+  route_name: message_digest_admin.tabs.history
+  title: 'History Tab'
+  base_route: message_digest_admin.tabs.default  
+  weight: 3
