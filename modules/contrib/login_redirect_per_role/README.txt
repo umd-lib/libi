@@ -1,22 +1,58 @@
-INTRODUCTION:
-Login Redirect per Role provides an Configuration page to set default URL to be
-redirected after login as per Role.
+Login And Logout Redirect Per Role
+---------------------
 
-If more than one Role is assigned to User, URL of Role with lesser weight will
-be used or it will be redirected to default URL.
+About
+---------------------
+Module provides ability:
 
-Admin can set Default Redirection URL as well as URL as per Roles.
+ * Redirect user on "Log in" and "Log out" to
+   different URLs depending on user role.
 
-REQUIREMENTS:
-None
+ * Set roles redirect priority.
 
-INSTALLATION:
-Enable Login Redirect Per Role from Extends url.
+Roles order in list (configuration form) is their priorities:
+higher in list - higher priority. For example: You set roles ordering as:
 
-CONFIGURATION:
-Path : Configuration -> Login Redirect per Role
-( ie. admin/people/login-redirect-per-role )
++ Admin
++ Manager
++ Authenticated
 
-ROADMAP:
-Adding Logout URL as per ROLE. Setting Homepage as per role,
-providing config form.
+It means that when some user log in (in case of "Login redirect" table,
+configuration form) or log out (in case of "Logout redirect" table,
+configuration form) module will check:
+
+Does this user have Admin role?
+
+ * Yes and Redirect URL is not empty: Redirect to related URL
+ * No or Redirect URL is empty:
+
+Does this user have Manager role?
+
+ * Yes and Redirect URL is not empty: Redirect to related URL
+ * No or Redirect URL is empty:
+
+Does this user have Authenticated role?
+
+ * Yes and Redirect URL is not empty: Redirect to related URL
+ * No or Redirect URL is empty: Use default Drupal action
+
+Installation
+---------------------
+ 1. Install the module to modules/contrib or modules folder
+ 2. Enable Login And Logout Redirect Per Role module
+
+Configuration
+---------------------
+
+ * In menu go to: Configuration -> System -> Login and Logout Redirect per role
+   (or /admin/people/login-and-logout-redirect-per-role)
+
+ * Set "Login redirect" table "Redirect URL" values and roles priority
+   (order in table) to setup redirect user on Log in action. Or leave
+   "Redirect URL" values empty if you don't need redirect on user Log in.
+
+ * Set "Logout redirect" table "Redirect URL" values and roles priority
+   (order in table) to setup redirect user on Log out action. Or leave
+   "Redirect URL" values empty if you don't need redirect on user Log in.
+
+ * Click "Save configuration" button.

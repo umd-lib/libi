@@ -39,7 +39,7 @@ function login_redirect_per_role_user_login_form_submit(array &$form, FormStateI
 
   /** @var \Drupal\login_redirect_per_role\LoginRedirectPerRole $service */
   $service = \Drupal::service('login_redirect_per_role.service');
-  $url = $service->getRedirectUrl();
+  $url = $service->getLoginRedirectUrl();
 
   if ($url instanceof Url) {
     $form_state->setRedirectUrl($url);

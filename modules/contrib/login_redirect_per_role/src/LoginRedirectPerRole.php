@@ -2,6 +2,7 @@
 
 namespace Drupal\login_redirect_per_role;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -10,7 +11,7 @@ use Drupal\Core\Utility\Token;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Login Redirect Per Role helper service.
+ * Login And Logout Redirect Per Role helper service.
  */
 class LoginRedirectPerRole implements LoginRedirectPerRoleInterface {
 
@@ -29,7 +30,7 @@ class LoginRedirectPerRole implements LoginRedirectPerRoleInterface {
   protected $currentRequest;
 
   /**
-   * The login_redirect_per_role.redirecturlsettings config object.
+   * The login_redirect_per_role.settings config object.
    *
    * @var \Drupal\Core\Config\Config
    */
@@ -50,7 +51,7 @@ class LoginRedirectPerRole implements LoginRedirectPerRoleInterface {
   protected $token;
 
   /**
-   * Constructs a new Login Redirect Per Role service object.
+   * Constructs a new Login And Logout Redirect Per Role service object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
    *   The currently active route match object.
@@ -66,7 +67,7 @@ class LoginRedirectPerRole implements LoginRedirectPerRoleInterface {
   public function __construct(RouteMatchInterface $current_route_match, RequestStack $request_stack, ConfigFactoryInterface $config_factory, AccountProxyInterface $current_user, Token $token) {
     $this->currentRouteMatch = $current_route_match;
     $this->currentRequest = $request_stack->getCurrentRequest();
-    $this->config = $config_factory->get('login_redirect_per_role.redirecturlsettings');
+    $this->config = $config_factory->get('login_redirect_per_role.settings');
     $this->currentUser = $current_user;
     $this->token = $token;
   }
@@ -90,52 +91,95 @@ class LoginRedirectPerRole implements LoginRedirectPerRoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function isDestinationAllowed() {
-    return $this->config->get('allow_destination');
+  public function getLoginRedirectUrl() {
+
+    if (!$this->isApplicableOnCurrentPage()) {
+      return NULL;
+    }
+
+    return $this->getRedirectUrl('login');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getUrl() {
+  public function getLogoutRedirectUrl() {
+    return $this->getRedirectUrl('logout');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLogoutConfig() {
+    return $this->getConfig('logout');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLoginConfig() {
+    return $this->getConfig('login');
+  }
+
+  /**
+   * Return redirect URL related to requested key and current user.
+   *
+   * @param string $key
+   *   Configuration key (login or logout).
+   *
+   * @return \Drupal\Core\Url|null
+   *   Redirect URL related to requested key and current user.
+   */
+  protected function getRedirectUrl($key) {
 
     $url = NULL;
-    $user_roles = $this->currentUser->getRoles();
+    $config = $this->getConfig($key);
 
-    if (count($user_roles) > 1 && $user_roles[0] == AccountProxyInterface::AUTHENTICATED_ROLE) {
-      unset($user_roles[0]);
+    if (!$config) {
+      return $url;
     }
 
-    foreach ($user_roles as $role) {
-      if (($string_url = $this->config->get('login_redirect_per_role_' . $role))) {
-        $string_url = $this->token->replace($string_url);
-        $url = Url::fromUserInput($string_url);
+    $user_roles = $this->currentUser->getRoles();
+    $destination = $this->currentRequest->query->get('destination');
+
+    foreach ($config as $role_id => $settings) {
+
+      // Do action only if user have a role and
+      // "Redirect URL" is set for this role.
+      if (in_array($role_id, $user_roles) && $settings['redirect_url']) {
+
+        // Prevent redirect if destination usage is allowed.
+        if ($settings['allow_destination'] && $destination) {
+          break;
+        }
+
+        $url = Url::fromUserInput($this->token->replace($settings['redirect_url']));
         break;
       }
-    }
-
-    if (!$url && ($string_url = $this->config->get('default_site_url'))) {
-      $string_url = $this->token->replace($string_url);
-      $url = Url::fromUserInput($string_url);
     }
 
     return $url;
   }
 
   /**
-   * {@inheritdoc}
+   * Return requested configuration items (login or logout) ordered by weight.
+   *
+   * @param string $key
+   *   Configuration key (login or logout).
+   *
+   * @return array
+   *   Requested configuration items (login or logout) ordered by weight.
    */
-  public function getRedirectUrl() {
-    $url = NULL;
+  protected function getConfig($key) {
+    $config = $this->config->get($key);
 
-    if (!$this->isApplicableOnCurrentPage()) {
-      return $url;
-    }
-    if ($this->isDestinationAllowed() && $this->currentRequest->query->get('destination')) {
-      return $url;
+    if ($config) {
+      uasort($config, [SortArray::class, 'sortByWeightElement']);
+
+      return $config;
     }
 
-    return $this->getUrl();
+    return [];
   }
 
 }

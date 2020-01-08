@@ -3,7 +3,7 @@
 namespace Drupal\login_redirect_per_role;
 
 /**
- * Interface defining Login Redirect Per Role helper service.
+ * Interface defining Login And Logout Redirect Per Role helper service.
  */
 interface LoginRedirectPerRoleInterface {
 
@@ -16,28 +16,35 @@ interface LoginRedirectPerRoleInterface {
   public function isApplicableOnCurrentPage();
 
   /**
-   * Checks is "destination" URL parameter usage allowed.
-   *
-   * @return bool
-   *   Result of check.
-   */
-  public function isDestinationAllowed();
-
-  /**
-   * Return URL to redirect to without applicability check.
+   * Return URL to redirect on user login.
    *
    * @return \Drupal\Core\Url|null
    *   URL to redirect to on success or NULL otherwise.
    */
-  public function getUrl();
+  public function getLoginRedirectUrl();
 
   /**
-   * Return URL to redirect to with applicability check.
+   * Return URL to redirect on user logout.
    *
    * @return \Drupal\Core\Url|null
-   *
    *   URL to redirect to on success or NULL otherwise.
    */
-  public function getRedirectUrl();
+  public function getLogoutRedirectUrl();
+
+  /**
+   * Return logout configuration.
+   *
+   * @return array
+   *   Logout configuration on success or an empty array otherwise.
+   */
+  public function getLogoutConfig();
+
+  /**
+   * Return login configuration.
+   *
+   * @return array
+   *   Login configuration on success or an empty array otherwise.
+   */
+  public function getLoginConfig();
 
 }
