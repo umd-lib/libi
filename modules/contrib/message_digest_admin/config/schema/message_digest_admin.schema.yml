@@ -1,0 +1,4 @@
+message_subscribe.settings:
+  type: config_object
+  label: 'Message Digest Admin settings'
+  
