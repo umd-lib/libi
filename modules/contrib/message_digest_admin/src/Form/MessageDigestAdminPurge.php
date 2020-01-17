@@ -3,7 +3,7 @@ namespace Drupal\message_digest_admin\Form;
 use Drupal\Core\Form\ConfigFormBase;  
 use Drupal\Core\Form\FormStateInterface;  
 
-class MessageDigestAdminSettings extends ConfigFormBase {  
+class MessageDigestAdminPurge extends ConfigFormBase {  
 
     protected function getEditableConfigNames() {  
         return [  

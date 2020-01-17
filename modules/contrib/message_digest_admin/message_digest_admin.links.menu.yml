@@ -1,12 +1,6 @@
-message_digest_admin.admin_settings_form:
+message_digest_admin.history:
   title: 'Message Digest Admin'
-  route_name: message_digest_admin.admin_settings_form
-  description: 'Message Digest Admin Settings'
+  route_name: message_digest_admin.history
+  description: 'Message Digest Admin'
   parent: message.main_settings
   weight: 99
-
-# entity.node_type.collecton:
-#   title:'Content Type'
-#   parent: message.main_settings
-#   description: 'Message Digest Admin Settsdsdsdsdsdsings'
-#   route_name: entity.node_type.collection
