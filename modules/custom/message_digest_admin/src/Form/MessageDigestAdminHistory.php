@@ -17,11 +17,10 @@ class MessageDigestAdminHistory extends ConfigFormBase {
     public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('message_digest_admin.adminsettings');
 
-    $form['welcome_message'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Welcome message'),
-      '#description' => $this->t('Welcome message display to users when they login'),
-      '#default_value' => $config->get('welcome_message'),
+    $form['current'] = [
+      '#type' => 'table',
+      '#caption' => t('History'),
+      '#header' => [t('Date'), t('Type')],
     ];
 
     return parent::buildForm($form, $form_state);

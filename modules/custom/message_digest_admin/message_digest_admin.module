@@ -2,12 +2,78 @@
 
 /**
  * @file
- * Contains welcome.module..
+ * Contains message_digest_admin module.
  */
 
-function welcome_user_login() {
-  $config = \Drupal::config('message_digest_admin.adminsettings');
-  drupal_set_message($config->get('welcome_message'));
+/**
+ * Get current message_digest entries
+ */
+function message_digest_admin_qmessage_digest($sent = NULL) {
+  $database = \Drupal::database();
+  $query = $database->select('message_digest', 'md');
+  $query->join('message__field_node_reference', 'mfnr', 'md.mid = mfnr.entity_id');
+  $query->join('node_field_data', 'nfd', 'mfnr.field_node_reference_target_id = nfd.nid');
+  $query->fields('md', array('mid'));
+  $query->fields('mfnr', array('entity_id', 'field_node_reference_target_id'));
+  $query->fields('nfd', array('title'));
+  if ($sent == 'SENT') {
+    $query->condition('md.sent', '1', '=');
+  }
+  if ($sent == 'UNSENT') {
+    $query->condition('md.sent', '0', '=');
+  }
+  $results = $query->execute();
+  return $results;
 }
 
+/**
+ * Temporarily set email address for user
+ */
+function message_digest_admin_chuser($uid) {
+  if (!$uid) {
+    return t('Error: UID missing');
+  }
+  $user = \Drupal\user\Entity\User::load($uid);
 
+}
+
+/**
+ * Set message_digest notifier
+ */
+function message_digest_admin_snotifier($notifier = 'message_digest:ten_minutes') {
+  $database = \Drupal::database();
+  $number = $database->update('message_digest')
+    ->fields([
+      'notifier' => $notifier,
+    ])
+    ->condition('sent', '0', '=')
+    ->execute();
+  return $number;
+}
+
+/**
+ * Delete sent messages
+ */
+function message_digest_admin_purge() {
+  $database = \Drupal::database();
+  $number = $database->delete('message_digest')->condition('sent', '1')->execute();
+  return $number;
+}
+
+/**
+ * Generate path based on nid and path
+ */
+function message_digest_admin_genpath($nid, $title_raw) {
+  $title = \Drupal\Core\Render\Markup::create($title_raw);
+  $link = \Drupal\Core\Link::createFromRoute($title, 'entity.node.canonical', ['node' => $nid]);
+  return $link->toString();
+}
+
+/**
+ * Generate edit based on nid and path
+ */
+function message_digest_admin_editpath($nid) {
+  $title = \Drupal\Core\Render\Markup::create('Edit');
+  $link = \Drupal\Core\Link::createFromRoute($title, 'entity.node.edit_form', ['node' => $nid]);
+  return $link->toString();
+}

@@ -7,6 +7,15 @@ message_digest_admin.history:
     _permission: 'access administration pages'
   options:
     _admin_route: TRUE
+message_digest_admin.staged:
+  path: '/admin/config/message-digest-admin/staged'
+  defaults: 
+    _form: '\Drupal\message_digest_admin\Form\MessageDigestAdminStaged'
+    _title: 'Staged Posts'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
 message_digest_admin.purge:
   path: '/admin/config/message-digest-admin/purge'
   defaults: 
