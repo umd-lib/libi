@@ -3,12 +3,6 @@ message_digest_admin.history:
   title: 'History' 
   base_route: message_digest_admin.history
 
-message_digest_admin.staged:
-  route_name: message_digest_admin.staged
-  title: 'Staged' 
-  base_route: message_digest_admin.history
-  weight: 1
-
 message_digest_admin.purge:
   route_name: message_digest_admin.purge
   title: 'Purge' 

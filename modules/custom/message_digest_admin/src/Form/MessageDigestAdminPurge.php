@@ -1,37 +1,50 @@
 <?php  
-namespace Drupal\message_digest_admin\Form;  
-use Drupal\Core\Form\ConfigFormBase;  
-use Drupal\Core\Form\FormStateInterface;  
+namespace Drupal\message_digest_admin\Form;
+  
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
-class MessageDigestAdminPurge extends ConfigFormBase {  
+class MessageDigestAdminPurge extends FormBase {  
 
-    protected function getEditableConfigNames() {  
-        return [  
-          'message_digest_admin.adminsettings',  
-        ];  
-      } 
+    /**
+     * {@inheritdoc}.
+     */
     public function getFormId() {  
-        return 'tab_form';  
+      return 'purge-tab-form';  
     }
 
+    /**
+     * {@inheritdoc}.
+     */
     public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('message_digest_admin.adminsettings');
 
+    $form['info'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => t('Clear digest table of messages which have already been sent to the staff. This means messages with <strong>sent=1</strong> and <strong>notifier=message_digest:never</strong>.'),
+    ];
     $form['sent'] = [
       '#type' => 'table',
-      '#caption' => t('Staged Content'),
-      '#header' => [t('Title')],
+      '#caption' => t('Sent Content'),
+      '#header' => [t('Title'), t('Status')],
     ];
 
     $sent = message_digest_admin_qmessage_digest('SENT');
+    $status_table = ['message_digest:never' => t('Ready for purge'), 'message_digest:weekly' => t('Needs evaluation'), 'message_digest:ten_minutes' => t('Needs evaluation')];
     $i = 0;
     while ($result = $sent->fetchObject()) {
       $nid = $result->field_node_reference_target_id;
+      $notifier = $result->notifier;
       $link = message_digest_admin_genpath($nid, $result->title);
       $form['sent'][$i]['title'] = [
         '#type' => 'html_tag',
         '#tag' => 'span',
         '#value' => $link,
+      ];
+      $form['sent'][$i]['status'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => $status_table[$notifier],
       ];
       $i++;
     }
@@ -42,18 +55,43 @@ class MessageDigestAdminPurge extends ConfigFormBase {
         '#value' => t('No old content'),
       ];
     }
-    return parent::buildForm($form, $form_state);
+    
+    $form['legend'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => t('This subset of the <b>message_digest</b> table includes all sent items meaning <strong>sent=1</strong>. If an item has been sent via cron or the <em>Send</em> tab, items also have the notifier updated to <strong>message_digest:never</strong> to prevent inadvertent resending. If an item has a different notifier but is also <strong>sent=1</strong>, it could indicate some backend confusion and may need further evaluation.'),
+    ];
+
+    if ($i != 0) {
+      $form['verify'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Check to confirm purge')
+      ];
+      $form['submit'] = [
+        '#type' => 'submit',
+        '#value' => t('Purge'),
+        '#button_type' => 'primary',
+      ];
+    }
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (!$form_state->getValue('verify')) {
+      $form_state->setErrorByName('verify', t('Must verify to proceed with purge'));
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
+    $purged = message_digest_admin_purge();
 
-    $this->config('message_digest_admin.adminsettings')
-      ->set('welcome_message', $form_state->getValue('welcome_message'))
-      ->save();
+    \Drupal::messenger()->addStatus(t('%purged record(s) cleared from digest table.', ['%purged' => $purged]));
   }  
 
 }  

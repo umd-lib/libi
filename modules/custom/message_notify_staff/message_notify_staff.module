@@ -40,12 +40,19 @@ function message_notify_staff_node_insert(Node $node) {
  */
 function message_notify_staff_mail_alter(&$message) {
   if ($message['id'] == 'message_digest_digest') {
-    $title = \Drupal::config('system.site')->get('name');
-    $date = new DateTime('NOW');
-    $message['subject'] = t('UMD Libraries Staff Bulletin - from @title for @date', ['@title' => $title, '@date' => $date->format('l, F jS')]);
+    $message['subject'] = message_notify_staff_gettitle();
     $replyTo = Settings::get('digest_reply_to');
     $message['reply-to'] = $replyTo;
   }
+}
+
+/**
+ * Get digest title
+ */
+function message_notify_staff_gettitle() {
+  $title = \Drupal::config('system.site')->get('name');
+  $date = new DateTime('NOW');
+  return t('UMD Libraries Staff Bulletin - from @title for @date', ['@title' => $title, '@date' => $date->format('l, F jS')]);
 }
 
 /**
