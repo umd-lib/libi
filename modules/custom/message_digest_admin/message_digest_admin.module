@@ -22,17 +22,19 @@ function message_digest_admin_cron() {
   $pre_count = message_digest_admin_setnotifier();
   $uid = message_digest_admin_digestuser();
   $raw = message_digest_admin_rawunsent($uid);	// For history storage
-  message_digest_admin_processdigest($uid);
 
-  $account_switcher->switchBack();
+  if (count($raw) > 0) {
+    message_digest_admin_processdigest($uid);
 
-  $post_count = message_digest_admin_setnotifier('message_digest:never', '1');
-  \Drupal::logger('message_digest_admin')->info('Message Digest emailed to @user. Message count: @pre_count. Post count: @post_count. Note these values should match.',
-    ['@user' => $uid, '@pre_count' => $pre_count, '@post_count' => $post_count]);
+    $account_switcher->switchBack();
 
-  $title = message_notify_staff_gettitle();
-  $history = message_digest_admin_recordhistory($title, 'cron', $uid, serialize($raw));
+    $post_count = message_digest_admin_setnotifier('message_digest:never', '1');
+    \Drupal::logger('message_digest_admin')->info('Message Digest emailed to @user. Message count: @pre_count. Post count: @post_count. Note these values should match.',
+      ['@user' => $uid, '@pre_count' => $pre_count, '@post_count' => $post_count]);
 
+    $title = message_notify_staff_gettitle();
+    $history = message_digest_admin_recordhistory($title, 'cron', $uid, serialize($raw));
+  } 
 }
 
 /**
