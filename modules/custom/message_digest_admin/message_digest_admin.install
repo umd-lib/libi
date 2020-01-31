@@ -30,6 +30,13 @@ function message_digest_admin_schema() {
         'unsigned' => TRUE,
         'default' => 0,
       ],
+      'email' => [
+        'description' => 'Email address to whom digest was sent',
+        'type' => 'varchar',
+        'length' => '100',
+        'not null' => FALSE,
+        'default' => '',
+      ],
       'title' => [
         'description' => 'Digest title.',
         'type' => 'varchar',
@@ -40,13 +47,13 @@ function message_digest_admin_schema() {
       'type' => [
         'description' => 'Whether a test or release.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 25,
         'not null' => TRUE,
         'default' => '',
       ],
       'content' => [
         'description' => 'Serialized message data.',
-        'type' => 'blob',
+        'type' => 'text',
         'size' => 'big',
         'not null' => FALSE,
       ],
