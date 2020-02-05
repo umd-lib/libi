@@ -57,7 +57,7 @@ class MessageDigestAdminHistory extends ConfigFormBase {
       $form['current'][0]['title'] = [
         '#type' => 'html_tag',
         '#tag' => 'span',
-        '#value' => t('No staged content'),
+        '#value' => t('No history'),
       ];
     }
 
