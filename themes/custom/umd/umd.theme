@@ -21,17 +21,7 @@ function umd_preprocess_message(&$variables) {
 function umd_preprocess_page(&$variables) {
     $variables['environment'] = theme_get_setting('environment');
     $variables['environment-banner'] = theme_get_setting('environment-banner');
-    echo "<script>console.log('Debug Objects: " . $variables['environment'] . "' );</script>";
-    print($variables['environment']);
 }
-
-function umd_preprocess_node(&$variables) {
-  $variables['environment'] = theme_get_setting('environment');
-    $variables['environment-banner'] = theme_get_setting('environment-banner');
-    echo "<script>console.log('Debug Objects1111: " . $variables['environment'] . "' );</script>";
-    print($variables['environment']);
-}
-
 
 function umd_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id = NULL) {
  
