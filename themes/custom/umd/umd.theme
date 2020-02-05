@@ -14,23 +14,39 @@ use Drupal\Core\Form;
 /**
  * Implements template_preprocess_message().
  */
+ 
 function umd_preprocess_message(&$variables) {
 }
 
-function umd_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id = NULL) {
-  // Work-around for a core bug affecting admin themes. See issue #943212.
-  if (isset($form_id)) {
-    return;
-  }
+function umd_preprocess_page(&$variables) {
+    $variables['environment'] = theme_get_setting('environment');
+    $variables['environment-banner'] = theme_get_setting('environment-banner');
+    echo "<script>console.log('Debug Objects: " . $variables['environment'] . "' );</script>";
+    print($variables['environment']);
+}
 
-  $form['env_config'] = array(
+function umd_preprocess_node(&$variables) {
+  $variables['environment'] = theme_get_setting('environment');
+    $variables['environment-banner'] = theme_get_setting('environment-banner');
+    echo "<script>console.log('Debug Objects1111: " . $variables['environment'] . "' );</script>";
+    print($variables['environment']);
+}
+
+
+function umd_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id = NULL) {
+ 
+  if(isset($form_id)){
+      return;
+  }  
+
+  $form['environment'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Environment'),
     '#default_value' => theme_get_setting('environment'),
     '#description'   => t("Enter the environment"),
   );
 
-  $form['env_banner_config'] = array(
+  $form['environment_banner'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Environment Banner Text'),
     '#default_value' => theme_get_setting('environment_banner'),
