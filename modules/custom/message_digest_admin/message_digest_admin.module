@@ -21,6 +21,7 @@ function message_digest_admin_cron() {
 
   $pre_count = message_digest_admin_setnotifier();
   $uid = message_digest_admin_digestuser();
+  $user_count = message_digest_admin_setdigestuser($uid);
   $raw = message_digest_admin_rawunsent($uid);	// For history storage
 
   if (count($raw) > 0) {
