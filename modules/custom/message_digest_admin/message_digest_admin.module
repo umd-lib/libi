@@ -21,6 +21,12 @@ function message_digest_admin_cron() {
 
   $pre_count = message_digest_admin_setnotifier();
   $uid = message_digest_admin_digestuser();
+
+  if ($uid < 1) {
+    return t('Invalid uid');
+  }
+
+  $user_count = message_digest_admin_setdigestuser($uid);
   $raw = message_digest_admin_rawunsent($uid);	// For history storage
 
   if (count($raw) > 0) {
@@ -29,7 +35,7 @@ function message_digest_admin_cron() {
     $account_switcher->switchBack();
 
     $post_count = message_digest_admin_setnotifier('message_digest:never', '1');
-    \Drupal::logger('message_digest_admin')->info('Message Digest emailed to @user. Message count: @pre_count. Post count: @post_count. Note these values should match.',
+    \Drupal::logger('message_digest_admin')->info('Message Digest emailed to @user. Message count: @pre_count. Notifier count: @post_count.',
       ['@user' => $uid, '@pre_count' => $pre_count, '@post_count' => $post_count]);
 
     $title = message_notify_staff_gettitle();
