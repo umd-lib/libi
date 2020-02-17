@@ -147,18 +147,3 @@ function bootstrap_theme_registry_alter(&$data, &$context1 = NULL, &$context2 = 
 function bootstrap_theme_suggestions_alter(&$data, &$context1 = NULL, &$context2 = NULL) {
   Bootstrap::alter(__FUNCTION__, $data, $context1, $context2);
 }
-
-function bootstrap_preprocess_node(&$variables) {
-    $variables['environment'] = theme_get_setting('environment');
-    $variables['environment-banner'] = theme_get_setting('environment-banner');
-}
-
-function bootstrap_preprocess_block(&$variables) {
-    $variables['environment'] = theme_get_setting('environment');
-    $variables['environment-banner'] = theme_get_setting('environment-banner');
-}
-
-function bootstrap_preprocess_html(&$variables) {
-    $variables['environment'] = theme_get_setting('environment');
-    $variables['environment-banner'] = theme_get_setting('environment-banner');
-}

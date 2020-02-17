@@ -63,7 +63,8 @@
     <css-placeholder token="{{ placeholder_token|raw }}">
     <js-placeholder token="{{ placeholder_token|raw }}">
   </head>
-  <body {{ attributes.addClass(body_classes) }} > 
+  <body class="{{ environment }}" {{ attributes.addClass(body_classes) }} > 
+  <p class= "environment-banner" >{{ environment_banner }}</p>
     <a href="#main-content" class="visually-hidden focusable skip-link"> 
       {{ 'Skip to main content'|t }}
     </a>
