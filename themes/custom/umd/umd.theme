@@ -12,3 +12,10 @@ use Drupal\Component\Utility\Html;
  */
 function umd_preprocess_message(&$variables) {
 }
+
+function umd_preprocess_block(&$variables) {
+    $node = \Drupal::request()->attributes->get('node');
+    if($node){
+      $variables['node_title'] = $node->getTitle();
+    }    
+}

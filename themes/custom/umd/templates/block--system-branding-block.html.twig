@@ -37,5 +37,8 @@
     </div>
   </div>
 
-  <a href="https://libi.lib.umd.edu/" title="{{ 'Home'|t }}" rel="home">Libi Home</a> / <a href="/blog/" title="Staff Blog Home">Staff Blog</a>
+  <a href="https://libi.lib.umd.edu/" title="{{ 'Home'|t }}" rel="home">Libi Home</a> / <a href="/blog/" title="Staff Blog Home">Staff Blog </a> 
+  {% if node_title %}
+   / {{ node_title }} 
+   {% endif %}
 {% endblock %}
