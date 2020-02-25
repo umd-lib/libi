@@ -7,15 +7,36 @@
 
 use Drupal\Component\Utility\Html;
 
+$var_a;
+
 /**
  * Implements template_preprocess_message().
  */
 function umd_preprocess_message(&$variables) {
 }
 
+function umd_preprocess_views_mini_pager(&$variables) {
+  if(isset($variables['items']['previous'])) {          
+      $variables['is_blog_first_page'] = "1";
+      echo "<script>console.log('Debug Objects1: " . $_SERVER['SERVER_NAME'] . "');</script>";
+    }
+    
+}
+
 function umd_preprocess_block(&$variables) {
     $node = \Drupal::request()->attributes->get('node');
     if($node){
       $variables['node_title'] = $node->getTitle();
-    }    
+    }       
+
+    //Add Port in case its localhost
+
+    if(isset($_SERVER['SERVER_PORT'])){
+      $variables['current_url']= 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+    }
+    else{
+      $variables['current_url']= 'http://'.$_SERVER['SERVER_NAME'];
+    }
+    
 }
+
