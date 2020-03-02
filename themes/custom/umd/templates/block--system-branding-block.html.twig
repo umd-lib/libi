@@ -37,14 +37,12 @@
     </div>
   </div>
 
-  <a href="https://libi.lib.umd.edu/" title="{{ 'Home'|t }}" rel="home">Libi Home</a> / 
-  {% if node_title %}
-      <a href="/blog/" title="Staff Blog Home">Staff Blog </a> 
-  {% endif %}
+  <a href="{{ current_url }}" title="{{ 'Home'|t }}" rel="home">Libi Home</a> / 
+  
   {% if is_blog_first_page %}
-      <a href="/blog/" title="Staff Blog Home">Staff Blog </a>
+      <a href="{{ current_url }}/blog/" title="Staff Blog Home">Staff Blog </a>
   {% else %} 
-      <a href="{{ current_url }}" title="Staff Blog Home">Staff Blog </a>      
+      <a href="{{ current_url }}/blog/" title="Staff Blog Home">Staff Blog </a>      
   {% endif %}
   {% if node_title %}
    / {{ node_title }} 
