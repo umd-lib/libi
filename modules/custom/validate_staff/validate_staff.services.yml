@@ -1,0 +1,7 @@
+services:
+  logger.channel.validate_staff:
+      parent: logger.channel_base
+      arguments: ['validate_staff']
+  staff.ldap_helper:
+    class: Drupal\validate_staff\LdapUserFactory
+    arguments: ['@ldap.servers', '@logger.channel.validate_staff']

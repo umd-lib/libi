@@ -34,6 +34,33 @@ function validate_staff_user_presave (UserInterface $account) {
     $filter = "(&(uid=" . $name . ")(ou=LIBR-*))";
     $result = $server->search(NULL, $filter);
 
+// Test Code 
+// $ldaptst = $result[0];
+
+// foreach ($ldaptst as $a => $b) {
+//   dsm($a);
+// }
+
+// dsm('---');
+
+// dsm($ldaptst['umgraduateassistant']);
+// dsm('-------');
+// dsm($ldaptst['umgraduateassistant'][0]);
+
+ $tstFactory = \Drupal::service('staff.ldap_helper');
+
+ $tstFactory->setUser($name, 'umd');
+
+if ($tstFactory->isLibraryStudent()) {
+   dsm('true');
+} else {
+   dsm('false');
+}
+
+// dsm($result[0]['umgraduateassistant']);
+
+// End test code
+
     // If no results, assume ou != LIBR-*
     if ($result['count'] < 1) {
       $message = t('This blog is available only to UMD Library Staff and Faculty');
@@ -58,4 +85,12 @@ function validate_staff_user_presave (UserInterface $account) {
     }
   }
 
+}
+
+/**
+ * Implements hook_ldap_attributes_needed_alter().
+ */
+function validate_staff_ldap_attributes_needed_alter(array &$attributes, array $params) {
+dsm($attributes);
+dsm($params);
 }
