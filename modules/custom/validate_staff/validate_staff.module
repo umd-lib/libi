@@ -29,45 +29,16 @@ function validate_staff_user_presave (UserInterface $account) {
 
     $name = $account->getAccountName();
 
-    $factory = \Drupal::service('ldap.servers');
-    $server = $factory->getServerByIdEnabled('umd');
-    $filter = "(&(uid=" . $name . ")(ou=LIBR-*))";
-    $result = $server->search(NULL, $filter);
-
-// Test Code 
-// $ldaptst = $result[0];
-
-// foreach ($ldaptst as $a => $b) {
-//   dsm($a);
-// }
-
-// dsm('---');
-
-// dsm($ldaptst['umgraduateassistant']);
-// dsm('-------');
-// dsm($ldaptst['umgraduateassistant'][0]);
-
- $tstFactory = \Drupal::service('staff.ldap_helper');
-
- $tstFactory->setUser($name, 'umd');
-
-if ($tstFactory->isLibraryStudent()) {
-   dsm('true');
-} else {
-   dsm('false');
-}
-
-// dsm($result[0]['umgraduateassistant']);
-
-// End test code
+    $ldap = \Drupal::service('staff.ldap_helper');
+    $ldap->setUser($name, 'umd');
 
     // If no results, assume ou != LIBR-*
-    if ($result['count'] < 1) {
+    if (!$ldap->isValidStaffBlogUser()) {
       $message = t('This blog is available only to UMD Library Staff and Faculty');
       $currentUser = \Drupal::currentUser();
       if ($currentUser->isAuthenticated()) {
         // In this event, the user is being created manually via form
-        $message = t('User does not have LDAP ou=LIBR-*');
+        $message = t('User does not meet Staff Blog LDAP requirements.');
         $response = new RedirectResponse(\Drupal::request()->getRequestUri());
       } else {
         // In this event, the process is automated likely via CAS
@@ -81,16 +52,14 @@ if ($tstFactory->isLibraryStudent()) {
       exit;
     }
     else {
-      $account->addRole('library_staff');
+      // $account->addRole('library_staff');
+      if ($ldap->roles) {
+        foreach ($ldap->roles as $role) {
+          $account->addRole($role);
+        }
+      }
     }
   }
 
 }
 
-/**
- * Implements hook_ldap_attributes_needed_alter().
- */
-function validate_staff_ldap_attributes_needed_alter(array &$attributes, array $params) {
-dsm($attributes);
-dsm($params);
-}

@@ -1,0 +1,9 @@
+validate_staff.grouper:
+  path: '/admin/config/validate-staff/grouper'
+  defaults:
+    _form: '\Drupal\validate_staff\Form\GrouperMap'
+    _title: 'Grouper Mapping'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

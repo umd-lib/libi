@@ -1166,8 +1166,10 @@ class Server extends ConfigEntityBase implements ServerInterface, LdapProtocolIn
 
       $massager = new MassageAttributes();
       $filter = '(' . $this->get('user_attr') . '=' . $massager->queryLdapAttributeValue($drupalUsername) . ')';
+      // Fetch all, including operational attributes.
+      $attributes = ['*', '+'];
 
-      $result = $this->search($baseDn, $filter);
+      $result = $this->search($baseDn, $filter, $attributes);
       if (!$result || !isset($result['count']) || !$result['count']) {
         continue;
       }

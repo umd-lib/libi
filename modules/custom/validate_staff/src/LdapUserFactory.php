@@ -14,6 +14,7 @@ class LdapUserFactory {
 
   public $user;
   public $libraryEmployee;
+  public $roles;
   protected $serverID;
   protected $uid;
   protected $factory;
@@ -35,6 +36,7 @@ class LdapUserFactory {
     $this->uid = $uid;
     if ($user = $this->factory->getUserDataFromServerByIdentifier($uid, $serverID)) {
       $this->user = $user;
+      $this->roles = $this->getGroups('memberof');
       $this->libraryEmployee = $this->isLibraryEmployee();
     } else {
       $this->logger->error('Failed to load user object from %uid in LdapUserFactory', ['%uid' => $this->uid]);
@@ -129,10 +131,33 @@ class LdapUserFactory {
     return empty($this->user['attr']) ? FALSE : $this->user['attr'];
   }
 
+  /**
+   * If validate_staff.settings is set and grouper groups exist, return Drupal groups.
+   *
+   * @return array of Drupal groups.
+   */
+  public function getGroups($key) {
+
+    $roles = [];
+
+    $config = \Drupal::config('validate_staff.settings');
+    $grouperMap = $config->get('grouper_map');
+    $grouperGroups = $this->getValue($key);
+
+    if ((!empty($grouperMap)) && (!empty($grouperGroups))) {
+      foreach ($grouperGroups as $group) {
+        $group = strtolower($group);
+        if (!empty($grouperMap[$group])) {
+          $roles[] = $grouperMap[$group];
+        }
+      }
+    }
+    return $roles;
+  }
+
   public function getValue($key) {
 
     if (($attr = $this->getAttr()) && (array_key_exists($key, $attr))) { 
-dsm($attr);
       $valueArray = $attr[$key];
       if (($count = $valueArray['count']) && ($count == 1)) {
         // If only one value, just return the string

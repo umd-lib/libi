@@ -1,0 +1,6 @@
+validate_staff.grouper:
+  title: 'Grouper Mapping'
+  route_name: validate_staff.grouper
+  description: 'Associate Drupal roles with Grouper groups'
+  parent: user.admin_index
+  weight: 99
