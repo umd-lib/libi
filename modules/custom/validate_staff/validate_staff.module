@@ -62,7 +62,12 @@ function validate_staff_user_presave (UserInterface $account) {
 function validate_staff_form_alter(&$form, &$form_state, $form_id) {
   $currentUser = \Drupal::currentUser();
   $isAdmin = $currentUser->hasPermission('access administration pages');  
-  if($isAdmin!=1){
-      $form['field_skip_ldap']['#access']= FALSE;
+  if($form_id=='user_form'){
+  if($isAdmin==1){
+    $form['field_skip_ldap']['#access']= TRUE;
   }
+  else{
+    $form['field_skip_ldap']['#access']= FALSE;
+  }
+}
 }
