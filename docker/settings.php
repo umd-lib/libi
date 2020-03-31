@@ -47,7 +47,3 @@ $settings['hash_salt'] = '$HASH_SALT';
 $settings['digest_user'] = '$DIGEST_USER';
 $settings['digest_key'] = '$DIGEST_KEY';
 $settings['digest_reply_to'] = '$DIGEST_REPLY_TO';
-
-$config['environment_indicator.indicator']['bg_color'] = '#$ENV_BGCOLOR';
-$config['environment_indicator.indicator']['fg_color'] = '#$ENV_FGCOLOR';
-$config['environment_indicator.indicator']['name'] = '$ENV_NAME';
