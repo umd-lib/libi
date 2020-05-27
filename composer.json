@@ -40,7 +40,6 @@
         "drupal/flag": "^4.0.0-beta1",
         "drupal/fontawesome": "^2.14.0",
         "drupal/ldap": "^3.0.0-beta7",
-        "drupal/login_redirect_per_role": "^1.3.0",
         "drupal/mailsystem": "^4.1.0",
         "drupal/message": "^1.0.0",
         "drupal/message_digest": "^1.0.0-rc3",

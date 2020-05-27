@@ -8,7 +8,7 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * Migrate data from Metatag-D7.
+ * Migrate entity data from Metatag on D7.
  *
  * @MigrateProcessPlugin(
  *   id = "d7_metatag_entities",
@@ -26,51 +26,49 @@ class MetatagEntities extends ProcessPluginBase {
       return NULL;
     }
 
+    // Re-shape D7 entries into for D8 entries.
+    $old_tags = unserialize($value);
+
+    // This is expected to be an array, if it isn't then something went wrong.
+    if (!is_array($old_tags)) {
+      throw new MigrateException('Data from Metatag-D7 was not a serialized array.');
+    }
+
     $tags_map = $this->tagsMap();
 
     $metatags = [];
 
-    // Re-shape D7 entries into for D8 entries.
-    $old_tags = unserialize($value);
-
-    // This is expected to be an array, if it isn't something went wrong.
-    if (!is_array($old_tags)) {
-      throw new MigrateException('Data from Metatag was not a serialized array.');
-    }
-
-    foreach ($old_tags as $d7_metatag_name => $data) {
+    foreach ($old_tags as $d7_metatag_name => $metatag_value) {
       // If there's no data for this tag, ignore everything.
-      if (empty($data)) {
+      if (empty($metatag_value)) {
         continue;
       }
 
       // @todo Skip these values for now, maybe some version supported these?
-      if (!is_array($data) || empty($data['value'])) {
+      if (!is_array($metatag_value) || empty($metatag_value['value'])) {
         continue;
       }
 
       // Convert the D7 meta tag name to the D8 equivalent. If this meta tag
       // is not recognized, skip it.
-      if (empty([$d7_metatag_name])) {
+      if (empty($tags_map[$d7_metatag_name])) {
         continue;
       }
-
-      // There's a D8 equivalent for this meta tag.
       $d8_metatag_name = $tags_map[$d7_metatag_name];
 
       // Convert the nested arrays to a flat structure.
-      if (is_array($data['value'])) {
+      if (is_array($metatag_value['value'])) {
         // Remove empty values.
-        $data['value'] = array_filter($data['value']);
+        $metatag_value['value'] = array_filter($metatag_value['value']);
         // Convert the array into a comma-separated list.
-        $data = implode(', ', $data['value']);
+        $metatag_value = implode(', ', $metatag_value['value']);
       }
       else {
-        $data = $data['value'];
+        $metatag_value = $metatag_value['value'];
       }
 
       // Keep the entire data structure.
-      $metatags[$d8_metatag_name] = $data;
+      $metatags[$d8_metatag_name] = $metatag_value;
     }
 
     return serialize($metatags);
@@ -82,7 +80,7 @@ class MetatagEntities extends ProcessPluginBase {
    * @return array
    *   An array of D7 tags to their D8 counterparts.
    */
-  public function tagsMap() {
+  protected function tagsMap() {
     $map = [
       // From the main Metatag module.
       'abstract' => 'abstract',
@@ -249,10 +247,6 @@ class MetatagEntities extends ProcessPluginBase {
       // 'hreflang_' . $langcode => 'hreflang_per_language',
       // From metatag_mobile.metatag.inc:
       'alternate_handheld' => 'alternate_handheld',
-      // This won't be added, it should be handled by the system implementing
-      // the AMP specification. Also, AMP is dramatic overreach by Google to
-      // reshape and replatform the web to its monetary goals, and is an abuse
-      // of its monopolistic power over the internet.
       // 'amphtml' => '',
       'android-app-link-alternative' => 'android_app_link_alternative',
       'android-manifest' => 'android_manifest',
@@ -331,6 +325,7 @@ class MetatagEntities extends ProcessPluginBase {
       'og:updated_time' => 'og_updated_time',
       'og:url' => 'og_url',
       // @todo '' => 'og_video',
+      // https://www.drupal.org/project/metatag/issues/3089445
       // @todo https://www.drupal.org/project/metatag/issues/3089445
       // @todo '' => 'og_video_duration',
       'og:video:height' => 'og_video_height',
