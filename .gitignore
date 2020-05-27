@@ -44,3 +44,6 @@ sites/simpletest
 
 # Ignore sync
 sync/
+
+# Mergetool ignore
+*.orig
